@@ -27,13 +27,13 @@ public class AgendamentoCSP extends CSP<Variable, String> {
 		}
 	}
 	public static final String estudar = "estudar";
-	public static final String trabalhar = "Estágio/Trabalho";
+	public static final String trabalhar = "Estï¿½gio/Trabalho";
 	public static final String dormir = "Sono";
-	public static final String comer = "Refeição";
+	public static final String comer = "Refeiï¿½ï¿½o";
 	public static final String init = "PIBIC/PIBIX/PIBITI";
-	public static final String voluntario = "Atividade voluntária";
+	public static final String voluntario = "Atividade voluntï¿½ria";
 	public static final String palestra = "Palestra/evento extracurricular";
-	public static final String aula = "Horário de aula";
+	public static final String aula = "Horï¿½rio de aula";
 	public static final String[] atividadesRestantes = { estudar, trabalhar };
 	// public static final String[] dominioDormir = {dormir};
 
@@ -106,7 +106,7 @@ public class AgendamentoCSP extends CSP<Variable, String> {
 		return blocosEstudo;
 	}
 
-	// main apenas para testar as variáveis
+	// main apenas para testar as variï¿½veis
 	/*
 	 * public static void main(String[] args) { Variable[] blocos = new
 	 * Variable[288];{ //for (int dia=1;dia<=6;dia++) { for (int i=0;i<288;i=i+2) {

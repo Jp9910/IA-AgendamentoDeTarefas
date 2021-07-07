@@ -69,6 +69,12 @@ public abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL> exte
                 assignment.add(var, value);
                 fireStateChanged(csp, assignment, var);
                 if (assignment.isConsistent(csp.getConstraints(var))) {
+                	/*---------------------Não faz parte do aima-------------------------*/
+                	for (VAR var1 : csp.getVariables()){
+                		if(value.toString().contains("estudo") && csp.getDomain(var1).contains(value))
+                			csp.removeValueFromDomain(var1,value);
+                	}
+                	/*-------------------------------------------------------------------*/
                     InferenceLog<VAR, VAL> log = inference(csp, assignment, var);
                     if (!log.isEmpty())
                         fireStateChanged(csp, null, null);
