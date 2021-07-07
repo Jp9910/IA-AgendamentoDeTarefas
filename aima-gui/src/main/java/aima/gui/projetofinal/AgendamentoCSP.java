@@ -7,6 +7,7 @@ import aima.core.search.csp.Domain;
 import aima.core.search.csp.Variable;
 import aima.core.search.csp.examples.NotEqualConstraint;
 import aima.gui.projetofinal.Variaveis;
+import aima.gui.projetofinal.ConstraintTodasAtividadesAlocadas;
 
 public class AgendamentoCSP extends CSP<Variable, String>{
 
@@ -28,16 +29,34 @@ public class AgendamentoCSP extends CSP<Variable, String>{
 	public static final String estudar = "estudar";
 	public static final String trabalhar = "trabalhar";
 	public static final String dormir = "dormir";
-	public static final String[] atividadesRestantes = {estudar,trabalhar,dormir};
+	public static final String comer = "comer";
+	public static final String[] atividadesRestantes = {estudar,trabalhar};
+	//public static final String[] dominioDormir = {dormir};
 	
 	public AgendamentoCSP() {
 		super(Arrays.asList(blocos));
 		
 		Domain<String> atividades = new Domain<>(atividadesRestantes); //construtor de Domain funciona com array?
-		for (Variable var : getVariables())//para cada variável,
-			setDomain(var, atividades);//setar o domínio dela para ser atividades
+		Domain<String> domDormir = new Domain<>(dormir);
+		Domain<String> domComer = new Domain<>(comer);
+		int i=-1;
+		for (Variable var : getVariables()){
+			i=(i+1)%48;
+			System.out.print(i+"-");
+			System.out.println(var);
+			if(i<=15) {
+				setDomain(var,domDormir);
+			}
+			else if (i<=17){
+				setDomain(var,domComer);
+			}
+			else
+				setDomain(var, atividades);
+		}
 		
-		addConstraint(new NotEqualConstraint<>(blocos[0],blocos[1]));
+		//addConstraint(new NotEqualConstraint<>(blocos[0],blocos[1]));
+		//addConstraint(new ConstraintTodasAtividadesAlocadas(atividadesRestantes));
+		
 	}
 	
 	//main apenas para testar as variáveis
