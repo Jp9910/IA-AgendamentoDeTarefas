@@ -26,7 +26,7 @@ public class AgendamentoCSP extends CSP<Variable, String>{
 			}
 		}
 	}
-	public static final String estudar = "estudar";
+	public static final String estudar = "estudo";
 	public static final String trabalhar = "trabalhar";
 	public static final String dormir = "dormir";
 	public static final String comer = "comer";
