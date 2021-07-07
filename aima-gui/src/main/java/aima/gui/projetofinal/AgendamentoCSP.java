@@ -27,34 +27,28 @@ public class AgendamentoCSP extends CSP<Variable, String> {
 		}
 	}
 	public static final String estudar = "estudar";
-	public static final String trabalhar = "Est�gio/Trabalho";
+	public static final String trabalhar = "Estagio/Trabalho";
 	public static final String dormir = "Sono";
-	public static final String comer = "Refei��o";
+	public static final String comer = "Refeicao";
 	public static final String init = "PIBIC/PIBIX/PIBITI";
-	public static final String voluntario = "Atividade volunt�ria";
+	public static final String voluntario = "Atividade voluntaria";
 	public static final String palestra = "Palestra/evento extracurricular";
-	public static final String aula = "Hor�rio de aula";
+	public static final String aula = "Horario de aula";
 	public static final String[] atividadesRestantes = { estudar, trabalhar };
 	// public static final String[] dominioDormir = {dormir};
 
 	public AgendamentoCSP(int caso) {
 		super(Arrays.asList(blocos));
 
-		/*Domain<String> atividades = new Domain<>(atividadesRestantes); // construtor de Domain funciona com array?
-		Domain<String> domDormir = new Domain<>(dormir);
-		Domain<String> domComer = new Domain<>(comer);
-		int i = -1;
-		for (Variable var : getVariables()) {
-			i = (i + 1) % 48;
-			System.out.print(i + "-");
-			System.out.println(var);
-			if (i <= 15) {
-				setDomain(var, domDormir);
-			} else if (i <= 17) {
-				setDomain(var, domComer);
-			} else
-				setDomain(var, atividades);
-		}*/
+		/*
+		 * Domain<String> atividades = new Domain<>(atividadesRestantes); // construtor
+		 * de Domain funciona com array? Domain<String> domDormir = new
+		 * Domain<>(dormir); Domain<String> domComer = new Domain<>(comer); int i = -1;
+		 * for (Variable var : getVariables()) { i = (i + 1) % 48; System.out.print(i +
+		 * "-"); System.out.println(var); if (i <= 15) { setDomain(var, domDormir); }
+		 * else if (i <= 17) { setDomain(var, domComer); } else setDomain(var,
+		 * atividades); }
+		 */
 		// addConstraint(new NotEqualConstraint<>(blocos[0],blocos[1]));
 		// addConstraint(new ConstraintTodasAtividadesAlocadas(atividadesRestantes));
 

@@ -1,14 +1,17 @@
 package aima.core.search.csp;
 
+import aima.core.search.csp.inference.DomainLog;
 import aima.core.search.csp.inference.InferenceLog;
 import aima.core.util.Tasks;
 
 import java.util.Optional;
 
 /**
- * Artificial Intelligence A Modern Approach (3rd Ed.): Figure 6.5, Page 215.<br>
+ * Artificial Intelligence A Modern Approach (3rd Ed.): Figure 6.5, Page
+ * 215.<br>
  * <br>
  * <p>
+ * 
  * <pre>
  * <code>
  * function BACKTRACKING-SEARCH(csp) returns a solution, or failure
@@ -48,67 +51,75 @@ import java.util.Optional;
  */
 public abstract class AbstractBacktrackingSolver<VAR extends Variable, VAL> extends CspSolver<VAR, VAL> {
 
-    /** Applies a recursive backtracking search to solve the CSP. */
-    public Optional<Assignment<VAR, VAL>> solve(CSP<VAR, VAL> csp) {
-        Assignment<VAR, VAL> result = backtrack(csp, new Assignment<>());
-        return result != null ? Optional.of(result) : Optional.empty();
-    }
+	/** Applies a recursive backtracking search to solve the CSP. */
+	public Optional<Assignment<VAR, VAL>> solve(CSP<VAR, VAL> csp) {
+		Assignment<VAR, VAL> result = backtrack(csp, new Assignment<>());
+		return result != null ? Optional.of(result) : Optional.empty();
+	}
 
-    /**
-     * Template method, which can be configured by overriding the three
-     * primitive operations below.
-     * @return An assignment (possibly incomplete if task was cancelled) or null if no solution was found.
-     */
-    private Assignment<VAR, VAL> backtrack(CSP<VAR, VAL> csp, Assignment<VAR, VAL> assignment) {
-        Assignment<VAR, VAL> result = null;
-        if (assignment.isComplete(csp.getVariables()) || Tasks.currIsCancelled()) {
-            result = assignment;
-        } else {
-            VAR var = selectUnassignedVariable(csp, assignment);
-            for (VAL value : orderDomainValues(csp, assignment, var)) {
-                assignment.add(var, value);
-                fireStateChanged(csp, assignment, var);
-                if (assignment.isConsistent(csp.getConstraints(var))) {
-                	/*---------------------Não faz parte do aima-------------------------*/
-                	for (VAR var1 : csp.getVariables()){
-                		if(value.toString().contains("estudo") && csp.getDomain(var1).contains(value))
-                			csp.removeValueFromDomain(var1,value);
-                	}
-                	/*-------------------------------------------------------------------*/
-                    InferenceLog<VAR, VAL> log = inference(csp, assignment, var);
-                    if (!log.isEmpty())
-                        fireStateChanged(csp, null, null);
-                    if (!log.inconsistencyFound()) {
-                        result = backtrack(csp, assignment);
-                        if (result != null)
-                            break;
-                    }
-                    log.undo(csp);
-                }
-                assignment.remove(var);
-            }
-        }
-        return result;
-    }
+	/**
+	 * Template method, which can be configured by overriding the three primitive
+	 * operations below.
+	 * 
+	 * @return An assignment (possibly incomplete if task was cancelled) or null if
+	 *         no solution was found.
+	 */
+	private Assignment<VAR, VAL> backtrack(CSP<VAR, VAL> csp, Assignment<VAR, VAL> assignment) {
+		Assignment<VAR, VAL> result = null;
+		if (agendaCompleta(csp) || Tasks.currIsCancelled()) {
+			result = assignment;
+		} else {
+			VAR var = selectUnassignedVariable(csp, assignment);
+			for (VAL value : orderDomainValues(csp, assignment, var)) {
+				assignment.add(var, value);
+				fireStateChanged(csp, assignment, var);
+				if (assignment.isConsistent(csp.getConstraints(var))) {
+					/*---------------------Não faz parte do aima-------------------------*/
+					DomainLog<VAR, VAL> log = new DomainLog<>();
+					csp = csp.copyDomains();
+					for (VAR var1 : csp.getVariables()) {
+						if (value.toString().contains("estudo") && csp.getDomain(var1).contains(value)) {
+							log.storeDomainFor(var1, csp.getDomain(var1));
+							csp.removeValueFromDomain(var1, value);
+						}
+					}
+					/*-------------------------------------------------------------------*/
+					// InferenceLog<VAR, VAL> log = inference(csp, assignment, var);
+					if (!log.isEmpty())
+						fireStateChanged(csp, null, null);
+					if (!log.inconsistencyFound()) {
+						result = backtrack(csp, assignment);
+						if (result != null)
+							break;
+					}
+					log.undo(csp);
+				}
+				assignment.remove(var);
+			}
+		}
+		return result;
+	}
 
-    /**
-     * Primitive operation, selecting a not yet assigned variable.
-     */
-    protected abstract VAR selectUnassignedVariable(CSP<VAR, VAL> csp, Assignment<VAR, VAL> assignment);
+	protected abstract boolean agendaCompleta(CSP<VAR, VAL> csp);
 
-    /**
-     * Primitive operation, ordering the domain values of the specified variable.
-     */
-    protected abstract Iterable<VAL> orderDomainValues(CSP<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR var);
+	/**
+	 * Primitive operation, selecting a not yet assigned variable.
+	 */
+	protected abstract VAR selectUnassignedVariable(CSP<VAR, VAL> csp, Assignment<VAR, VAL> assignment);
 
-    /**
-     * Primitive operation, which tries to optimize the CSP representation with respect to a new assignment.
-     *
-     * @param var The variable which just got a new value in the assignment.
-     * @return An object which provides information about
-     * (1) whether changes have been performed,
-     * (2) possibly inferred empty domains, and
-     * (3) how to restore the original CSP.
-     */
-    protected abstract InferenceLog<VAR, VAL> inference(CSP<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR var);
+	/**
+	 * Primitive operation, ordering the domain values of the specified variable.
+	 */
+	protected abstract Iterable<VAL> orderDomainValues(CSP<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR var);
+
+	/**
+	 * Primitive operation, which tries to optimize the CSP representation with
+	 * respect to a new assignment.
+	 *
+	 * @param var The variable which just got a new value in the assignment.
+	 * @return An object which provides information about (1) whether changes have
+	 *         been performed, (2) possibly inferred empty domains, and (3) how to
+	 *         restore the original CSP.
+	 */
+	protected abstract InferenceLog<VAR, VAL> inference(CSP<VAR, VAL> csp, Assignment<VAR, VAL> assignment, VAR var);
 }

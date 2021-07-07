@@ -25,9 +25,12 @@ public class Demo {
 		System.out.println("Bloco CSP (Backtracking + AC3)");
 		solution = solver.solve(csp);
 		// solution.ifPresent(System.out::println);
-		for (var v : solution.get().getVariables()) {
+		for (var v : csp.getVariables()) {
 			var variavel = v.getName();
 			var valor = solution.get().getValue(v);
+			if (valor == null) {
+				valor = csp.getDomain(v).size() == 1 ? csp.getDomain(v).get(0) : "livre";
+			}
 			System.out.println(variavel + "=" + valor);
 		}
 		System.out.println(stepCounter.getResults() + "\n");
