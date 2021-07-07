@@ -1,1 +1,4 @@
 *.project
+/aima-core/*.classpath
+/aima-gui/*.classpath
+/aimax-osmm/*.classpath
