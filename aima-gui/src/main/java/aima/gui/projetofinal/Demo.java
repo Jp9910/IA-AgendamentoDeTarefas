@@ -17,13 +17,14 @@ import aima.core.search.csp.inference.AC3Strategy;
 public class Demo {
 
 	public static void main(String[] args) {
-		CSP<Variable, String> csp = new AgendamentoCSP(1);
+		CSP<Variable, String> csp = new AgendamentoCSP(2);
 		CspListener.StepCounter<Variable, String> stepCounter = new CspListener.StepCounter<>();
 		CspSolver<Variable, String> solver;
 		Optional<Assignment<Variable, String>> solution;
 		String[] dias = { "", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" };
 
-		solver = new FlexibleBacktrackingSolver<Variable, String>().set(new AC3Strategy<>());
+		solver = new FlexibleBacktrackingSolver<Variable, String>();//.set(new AtividadesRemoveStrategy<>());// .set(new
+																											// AC3Strategy<>());
 		solver.addCspListener(stepCounter);
 		stepCounter.reset();
 		System.out.println("Bloco CSP (Backtracking + AC3)");
@@ -38,6 +39,7 @@ public class Demo {
 			imprimirHorario(csp, solution, v2);
 
 		}
+		System.out.println(stepCounter.getResults() + "\n");
 	}
 
 	private static String getValue(Variable variable, CSP<Variable, String> csp,
