@@ -45,6 +45,9 @@ public class AgendamentoCSP extends CSP<Variable, String> {
 		case 2:
 			Caso2();
 			break;
+		case 3:
+			Caso3();
+			break;
 		}
 	}
 
@@ -109,6 +112,41 @@ public class AgendamentoCSP extends CSP<Variable, String> {
 				} else if (dia == 5 && (horario >= 30 && horario <= 37)) {
 					setDomain(var, new Domain<>(palestra));
 				} else if (dia == 5 && (horario >= 14 && horario <= 21)) {
+					setDomain(var, new Domain<>(voluntario));
+				} else {
+					setDomain(var, new Domain<>(blocosEstudo));
+				}
+			}
+		}
+	}
+
+	public void Caso3() {
+		var variables = getVariables();
+		// preenche com blocos de materias
+		var blocosEstudo = new ArrayList<String>();
+		blocosEstudo = criarBlocosMateria(2, "ELET0043", blocosEstudo);
+		blocosEstudo = criarBlocosMateria(4, "MAT0096", blocosEstudo);
+		blocosEstudo = criarBlocosMateria(4, "MAT0154", blocosEstudo);
+		blocosEstudo = criarBlocosMateria(4, "ESTAT0011", blocosEstudo);
+		blocosEstudo = criarBlocosMateria(4, "COMP0409", blocosEstudo);
+		blocosEstudo = criarBlocosMateria(4, "COMP0415", blocosEstudo);
+		blocosEstudo = criarBlocosMateria(4, "COMP0412", blocosEstudo);
+		blocosEstudo = criarBlocosMateria(2, "COMP0417", blocosEstudo);
+
+		for (int dia = 0; dia < 6; dia++) {
+			for (int horario = 0; horario < 48; horario++) {
+				Variable var = variables.get((dia * 48) + horario);
+				if (horario >= 46 || horario <= 13) {
+					setDomain(var, new Domain<>(dormir));
+				} else if (horario == 14 || horario == 15 || horario == 24 || horario == 25 || horario == 38
+						|| horario == 39) {
+					setDomain(var, new Domain<>(comer));
+				} else if (((dia >= 0 && dia <= 3) && (horario >= 26 && horario <= 37))
+						|| (dia == 4 && ((horario >= 26 && horario <= 29) || (horario >= 24 && horario <= 37)))) {
+					setDomain(var, new Domain<>(aula));
+				} else if (dia == 5 && (horario >= 30 && horario <= 37)) {
+					setDomain(var, new Domain<>(palestra));
+				} else if ((dia == 0 || dia == 2 || dia == 4) && (horario >= 40 && horario <= 45)) {
 					setDomain(var, new Domain<>(voluntario));
 				} else {
 					setDomain(var, new Domain<>(blocosEstudo));
