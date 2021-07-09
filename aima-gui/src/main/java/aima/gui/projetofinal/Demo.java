@@ -21,25 +21,13 @@ public class Demo {
 		CspListener.StepCounter<Variable, String> stepCounter = new CspListener.StepCounter<>();
 		CspSolver<Variable, String> solver;
 		Optional<Assignment<Variable, String>> solution;
-		String[] dias = { "", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" };
-
-		solver = new FlexibleBacktrackingSolver<Variable, String>();//.set(new AtividadesRemoveStrategy<>());// .set(new
-																											// AC3Strategy<>());
+		solver = new FlexibleBacktrackingSolver<Variable, String>();// .set(new AtividadesRemoveStrategy<>());//
+																	// .set(new
+																	// AC3Strategy<>());
 		solver.addCspListener(stepCounter);
 		stepCounter.reset();
-		System.out.println("Bloco CSP (Backtracking + AC3)");
 		solution = solver.solve(csp);
-		System.out.format("%25s%25s%25s%25s%25s%25s%25s\n", dias);
-		boolean meiaHora = false;
-		for (int i = 0; i < 24; i++) {
-			var v1 = i + ":00-" + i + ":30";
-			var v2 = i + ":30-" + (i == 23 ? 0 : i + 1) + ":00";
-			meiaHora = !meiaHora;
-			imprimirHorario(csp, solution, v1);
-			imprimirHorario(csp, solution, v2);
-
-		}
-		System.out.println(stepCounter.getResults() + "\n");
+		imprimirAgenda(solution, solver, csp, stepCounter);
 	}
 
 	private static String getValue(Variable variable, CSP<Variable, String> csp,
@@ -60,5 +48,24 @@ public class Demo {
 			toPrint.add(getValue(values.get(j), csp, solution));
 		}
 		System.out.format("%25s%25s%25s%25s%25s%25s%25s\n", toPrint.toArray());
+	}
+
+	private static void imprimirAgenda(Optional<Assignment<Variable, String>> solution,
+			CspSolver<Variable, String> solver, CSP<Variable, String> csp,
+			CspListener.StepCounter<Variable, String> stepCounter) {
+		String[] dias = { "", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" };
+		System.out.println("Bloco CSP (Backtracking + AC3)");
+		
+		System.out.format("%25s%25s%25s%25s%25s%25s%25s\n", dias);
+		boolean meiaHora = false;
+		for (int i = 0; i < 24; i++) {
+			var v1 = i + ":00-" + i + ":30";
+			var v2 = i + ":30-" + (i == 23 ? 0 : i + 1) + ":00";
+			meiaHora = !meiaHora;
+			imprimirHorario(csp, solution, v1);
+			imprimirHorario(csp, solution, v2);
+
+		}
+		System.out.println(stepCounter.getResults() + "\n");
 	}
 }
