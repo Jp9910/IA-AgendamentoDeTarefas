@@ -2,6 +2,7 @@ package aima.gui.projetofinal;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import aima.core.search.csp.Assignment;
@@ -17,13 +18,16 @@ import aima.core.search.csp.inference.AC3Strategy;
 public class Demo {
 
 	public static void main(String[] args) {
-		CSP<Variable, String> csp = new AgendamentoCSP(2);
+		System.out.println("Caso 1 (1)\nCaso 2 (2)\nCaso 3 (3)\n");
+		System.out.print("Selecione qual caso deseja visualizar: ");
+		var scanner = new Scanner(System.in);
+		var caso = scanner.nextInt();
+		
+		CSP<Variable, String> csp = new AgendamentoCSP(caso);
 		CspListener.StepCounter<Variable, String> stepCounter = new CspListener.StepCounter<>();
 		CspSolver<Variable, String> solver;
 		Optional<Assignment<Variable, String>> solution;
-		solver = new FlexibleBacktrackingSolver<Variable, String>();// .set(new AtividadesRemoveStrategy<>());//
-																	// .set(new
-																	// AC3Strategy<>());
+		solver = new FlexibleBacktrackingSolver<Variable, String>();
 		solver.addCspListener(stepCounter);
 		stepCounter.reset();
 		solution = solver.solve(csp);
@@ -54,7 +58,7 @@ public class Demo {
 			CspSolver<Variable, String> solver, CSP<Variable, String> csp,
 			CspListener.StepCounter<Variable, String> stepCounter) {
 		String[] dias = { "", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" };
-		System.out.println("Bloco CSP (Backtracking + AC3)");
+		System.out.println("Bloco CSP (Backtracking)");
 		
 		System.out.format("%25s%25s%25s%25s%25s%25s%25s\n", dias);
 		boolean meiaHora = false;
